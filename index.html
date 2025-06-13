@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CasualOS Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        // 1. Add your Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoicGVhc2hvb3RlciIsImEiOiJjbWFzdzk1b2kwcGd0MmtwcXd4cmVmcTk4In0.ULAjkgtUlUV18OirDsnSgQ'; // <-- IMPORTANT: Replace this!
+        
+        // 2. Initialize the map
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [-98.5795, 39.8283], // Start centered on the US
+            zoom: 3
+        });
+
+        // 3. Listen for messages from CasualOS
+        window.addEventListener('message', (event) => {
+            // // For security, only accept messages from your ao.bot instance
+            // if (event.origin !== 'https://alpha.casualos.com') {
+            //     return;
+            // }
+
+            const data = event.data;
+            if (data && data.action === 'zoomToLocation') {
+                map.flyTo({
+                    center: data.coordinates,
+                    zoom: 12,
+                    essential: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>
