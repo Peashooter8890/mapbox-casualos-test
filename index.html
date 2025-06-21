@@ -16,30 +16,31 @@
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoicGVhc2hvb3RlciIsImEiOiJjbWFzdzk1b2kwcGd0MmtwcXd4cmVmcTk4In0.ULAjkgtUlUV18OirDsnSgQ';
 
+        // Default values
+        let center = [-98.5795, 39.8283];
+        let zoom = 3;
+
+        // Check for coords in URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('coords')) {
+            const coordsStr = params.get('coords');
+            const coordsArr = coordsStr.split(',').map(Number);
+            if (
+                coordsArr.length === 2 &&
+                !isNaN(coordsArr[0]) &&
+                !isNaN(coordsArr[1])
+            ) {
+                center = coordsArr;
+                zoom = 6;
+            }
+        }
+
+        // Initialize map with center/zoom (no animation)
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [-98.5795, 39.8283],
-            zoom: 3
-        });
-
-        map.on('style.load', () => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.has('coords')) {
-                const coordsStr = params.get('coords');
-                const coordsArr = coordsStr.split(',').map(Number);
-                if (
-                    coordsArr.length === 2 &&
-                    !isNaN(coordsArr[0]) &&
-                    !isNaN(coordsArr[1])
-                ) {
-                    map.flyTo({
-                        center: coordsArr,
-                        zoom: 12,
-                        essential: true
-                    });
-                }
-            }
+            center: center,
+            zoom: zoom
         });
     </script>
 </body>
